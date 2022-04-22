@@ -11,6 +11,6 @@ import org.jetbrains.annotations.NotNull;
 @JsonAutoDetect(fieldVisibility = ANY)
 public record ProviderResponse(
     @NotNull String provider,
-    @NotNull List<ItemResponse> items
+    @NotNull List<ItemPayload> items
 ) implements Serializable {
 }
