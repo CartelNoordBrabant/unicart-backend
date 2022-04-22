@@ -1,6 +1,5 @@
 package io.cartel.noord.brabant.api.controllers;
 
-import io.cartel.noord.brabant.api.dtos.ErrorResponse;
 import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
 import io.cartel.noord.brabant.domain.exceptions.InvalidBase64Exception;
 import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
@@ -28,7 +27,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  * is not overridden so dealing with logging is not necessary.
  */
 @ControllerAdvice
-public class DiffExceptionHandler extends ResponseEntityExceptionHandler {
+public class CartControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DiffSideNotFoundException.class)
     @ResponseStatus(NOT_FOUND)

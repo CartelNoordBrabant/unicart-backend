@@ -1,34 +1,33 @@
 package io.cartel.noord.brabant.domain.services;
 
-import io.cartel.noord.brabant.domain.entities.DiffSide;
-import io.cartel.noord.brabant.domain.enums.Side;
-import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
-import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
-import io.cartel.noord.brabant.domain.repositories.DiffSideRepository;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-
-import java.util.UUID;
-
 import static io.cartel.noord.brabant.domain.configs.CacheConfig.DIFF_CACHE;
 import static io.cartel.noord.brabant.domain.enums.Side.LEFT;
 import static io.cartel.noord.brabant.domain.enums.Side.RIGHT;
 import static io.cartel.noord.brabant.shared.helpers.Base64Helper.decodeB64;
 import static io.cartel.noord.brabant.shared.helpers.JSONHelper.isValidJSON;
 
+import io.cartel.noord.brabant.domain.entities.DiffSide;
+import io.cartel.noord.brabant.domain.enums.Side;
+import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
+import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
+import io.cartel.noord.brabant.domain.repositories.DiffSideRepository;
+import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
 /**
- * {@link DiffService} abstracts all high level logical operations to handle diffs, like
+ * {@link CartService} abstracts all high level logical operations to handle diffs, like
  * when to persist and retrieve data, when to calculate diffs, caching and eviction.
  */
 @Service
-public class DiffService {
+public class CartService {
 
     private final DiffSideRepository sideRepository;
     private final DiffCheckService checkService;
 
-    public DiffService(DiffSideRepository sideRepository, DiffCheckService checkService) {
+    public CartService(DiffSideRepository sideRepository, DiffCheckService checkService) {
         this.sideRepository = sideRepository;
         this.checkService = checkService;
     }

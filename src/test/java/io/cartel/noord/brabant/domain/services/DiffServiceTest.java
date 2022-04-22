@@ -1,7 +1,5 @@
 package io.cartel.noord.brabant.domain.services;
 
-import io.cartel.noord.brabant.api.dtos.DiffResponse;
-import io.cartel.noord.brabant.api.dtos.Difference;
 import io.cartel.noord.brabant.domain.entities.DiffSide;
 import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
 import io.cartel.noord.brabant.domain.exceptions.InvalidBase64Exception;

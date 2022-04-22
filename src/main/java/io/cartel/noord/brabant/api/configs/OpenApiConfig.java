@@ -17,7 +17,7 @@ public class OpenApiConfig {
             @Value("${app.source.url}") String sourceURL
     ) {
         var info = new Info()
-                .title("Diff API")
+                .title("UniCart API")
                 .version(version)
                 .description(description);
 

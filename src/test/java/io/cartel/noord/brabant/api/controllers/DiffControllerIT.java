@@ -1,7 +1,5 @@
 package io.cartel.noord.brabant.api.controllers;
 
-import io.cartel.noord.brabant.api.dtos.DiffResponse;
-import io.cartel.noord.brabant.api.dtos.ErrorResponse;
 import io.cartel.noord.brabant.shared.AbstractRedisIT;
 import io.cartel.noord.brabant.api.enums.DiffResult;
 import io.cartel.noord.brabant.api.enums.ErrorCode;
