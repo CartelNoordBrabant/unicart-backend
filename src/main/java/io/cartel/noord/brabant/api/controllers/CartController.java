@@ -1,8 +1,9 @@
 package io.cartel.noord.brabant.api.controllers;
 
-import io.cartel.noord.brabant.api.dtos.AddItemPayload;
 import io.cartel.noord.brabant.api.dtos.CartResponse;
+import io.cartel.noord.brabant.api.dtos.ItemPayload;
 import java.util.UUID;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/cart")
 public class CartController {
 
-    @PostMapping("{id}")
-    public void saveItem(@PathVariable UUID id, @RequestBody AddItemPayload payload) {
+    @PostMapping("{id}/provider/{provider}")
+    public void addItem(@PathVariable UUID id, @RequestBody ItemPayload payload) {
+    }
+
+    @DeleteMapping("{id}/provider/{provider}/item/{code}")
+    public void removeItem(
+        @PathVariable UUID id,
+        @PathVariable String provider,
+        @PathVariable String code) {
     }
 
     @GetMapping("{id}")
