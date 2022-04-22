@@ -1,4 +1,4 @@
-package io.cartel.noord.brabant.domain.services;
+package io.cartel.noord.brabant.domain.repositories;
 
 import static java.util.stream.Collectors.toList;
 
@@ -10,15 +10,15 @@ import io.cartel.noord.brabant.api.dtos.ProviderResponse;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
-public class CartService {
+@Repository
+public class CartRepository {
 
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper mapper;
 
-    public CartService(StringRedisTemplate redisTemplate, ObjectMapper mapper) {
+    public CartRepository(StringRedisTemplate redisTemplate, ObjectMapper mapper) {
         this.redisTemplate = redisTemplate;
         this.mapper = mapper;
     }
@@ -29,36 +29,22 @@ public class CartService {
         @NotNull ItemPayload payload
     ) {
         try {
-
-            var item = mapper.writeValueAsString(payload);
-
-            redisTemplate.opsForSet()
-                .add(cartKey(id), provider);
-
+            redisTemplate.opsForSet().add(cartKey(id), provider);
             redisTemplate.opsForHash()
-                .put(providerKey(id, provider), payload.code(), item);
-
+                .put(providerKey(id, provider), payload.code(), mapper.writeValueAsString(payload));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
     }
 
-    public void removeItem(
-        @NotNull UUID id,
-        @NotNull String provider,
-        @NotNull String code
-    ) {
+    public void removeItem(UUID id, String provider, String code) {
         redisTemplate.opsForHash()
             .delete(providerKey(id, provider), code);
     }
 
-    public CartResponse getCart(@NotNull UUID id) {
-        var providerIds = redisTemplate.opsForSet().members(cartKey(id));
-        if (providerIds == null) {
-            return null;
-        }
-
-        var providers = providerIds.stream()
+    public CartResponse getCart(UUID id) {
+        var providers = redisTemplate.opsForSet().members(cartKey(id))
+            .stream()
             .map(provider -> {
                 var items = redisTemplate.opsForHash()
                     .values(providerKey(id, provider))
@@ -86,4 +72,5 @@ public class CartService {
     private String providerKey(UUID id, String provider) {
         return String.format("cart:%s:provider:%s", id, provider);
     }
+
 }

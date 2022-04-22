@@ -21,14 +21,14 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * {@link DiffSideRepositoryIT} guarantees that data is stored and retrieved from repository as we want.
+ * {@link ChartRepositoryIT} guarantees that data is stored and retrieved from repository as we want.
  *
  * <p>A real redis instance is used, and should be available to this integration test.
  *
  * <p>Using a solution like "testcontainers" would remove the need of a redis instance running locally.
  */
 @DisplayName("Diff Side Repository")
-class DiffSideRepositoryIT extends AbstractRedisIT {
+class ChartRepositoryIT extends AbstractRedisIT {
 
     @Value("${diff.cache.ttl-minutes}")
     private long timeToLive;
@@ -37,7 +37,7 @@ class DiffSideRepositoryIT extends AbstractRedisIT {
     private StringRedisTemplate redisTemplate;
 
     @Autowired
-    private DiffSideRepository repository;
+    private ChartRepository repository;
 
     @Nested
     @DisplayName("when saving a diff side")

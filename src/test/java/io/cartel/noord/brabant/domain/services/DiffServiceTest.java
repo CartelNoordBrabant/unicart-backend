@@ -4,7 +4,7 @@ import io.cartel.noord.brabant.domain.entities.DiffSide;
 import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
 import io.cartel.noord.brabant.domain.exceptions.InvalidBase64Exception;
 import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
-import io.cartel.noord.brabant.domain.repositories.DiffSideRepository;
+import io.cartel.noord.brabant.domain.repositories.ChartRepository;
 import io.cartel.noord.brabant.api.enums.DiffResult;
 import io.cartel.noord.brabant.domain.enums.Side;
 import io.cartel.noord.brabant.shared.helpers.RandomHelper;
@@ -37,7 +37,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
 class DiffServiceTest {
 
     @Mock
-    private DiffSideRepository sideRepository;
+    private ChartRepository sideRepository;
 
     @Mock
     private DiffCheckService checkService;
