@@ -1,11 +1,11 @@
-package com.ffdev.diff.domain.services;
+package io.cartel.noord.brabant.domain.services;
 
-import com.ffdev.diff.api.dtos.DiffResponse;
-import com.ffdev.diff.domain.entities.DiffSide;
-import com.ffdev.diff.domain.enums.Side;
-import com.ffdev.diff.domain.exceptions.DiffSideNotFoundException;
-import com.ffdev.diff.domain.exceptions.InvalidJsonException;
-import com.ffdev.diff.domain.repositories.DiffSideRepository;
+import io.cartel.noord.brabant.api.dtos.DiffResponse;
+import io.cartel.noord.brabant.domain.entities.DiffSide;
+import io.cartel.noord.brabant.domain.enums.Side;
+import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
+import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
+import io.cartel.noord.brabant.domain.repositories.DiffSideRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-import static com.ffdev.diff.domain.configs.CacheConfig.DIFF_CACHE;
-import static com.ffdev.diff.domain.enums.Side.LEFT;
-import static com.ffdev.diff.domain.enums.Side.RIGHT;
-import static com.ffdev.diff.shared.helpers.Base64Helper.decodeB64;
-import static com.ffdev.diff.shared.helpers.JSONHelper.isValidJSON;
+import static io.cartel.noord.brabant.domain.configs.CacheConfig.DIFF_CACHE;
+import static io.cartel.noord.brabant.domain.enums.Side.LEFT;
+import static io.cartel.noord.brabant.domain.enums.Side.RIGHT;
+import static io.cartel.noord.brabant.shared.helpers.Base64Helper.decodeB64;
+import static io.cartel.noord.brabant.shared.helpers.JSONHelper.isValidJSON;
 
 /**
  * {@link DiffService} abstracts all high level logical operations to handle diffs, like

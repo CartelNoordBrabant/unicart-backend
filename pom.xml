@@ -8,11 +8,11 @@
         <version>2.4.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.ffdev</groupId>
-    <artifactId>diff</artifactId>
+    <groupId>io.cartel.noord.brabant</groupId>
+    <artifactId>unicart-backend</artifactId>
     <version>1.0.0</version>
-    <name>diff</name>
-    <description>APIs to verify side-by-side diffs</description>
+    <name>unicart-backend</name>
+    <description>Awesome UniCart Backend</description>
     <properties>
         <java.version>16</java.version>
         <jetbrains.annotations.version>20.1.0</jetbrains.annotations.version>

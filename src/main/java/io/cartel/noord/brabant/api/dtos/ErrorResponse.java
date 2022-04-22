@@ -1,7 +1,7 @@
-package com.ffdev.diff.api.dtos;
+package io.cartel.noord.brabant.api.dtos;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.ffdev.diff.api.enums.ErrorCode;
+import io.cartel.noord.brabant.api.enums.ErrorCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jetbrains.annotations.NotNull;
 

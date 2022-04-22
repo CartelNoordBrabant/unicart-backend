@@ -1,12 +1,16 @@
-package com.ffdev.diff.domain.services;
+package io.cartel.noord.brabant.domain.services;
 
-import com.ffdev.diff.api.dtos.DiffResponse;
-import com.ffdev.diff.api.dtos.Difference;
-import com.ffdev.diff.domain.entities.DiffSide;
-import com.ffdev.diff.domain.exceptions.DiffSideNotFoundException;
-import com.ffdev.diff.domain.exceptions.InvalidBase64Exception;
-import com.ffdev.diff.domain.exceptions.InvalidJsonException;
-import com.ffdev.diff.domain.repositories.DiffSideRepository;
+import io.cartel.noord.brabant.api.dtos.DiffResponse;
+import io.cartel.noord.brabant.api.dtos.Difference;
+import io.cartel.noord.brabant.domain.entities.DiffSide;
+import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
+import io.cartel.noord.brabant.domain.exceptions.InvalidBase64Exception;
+import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
+import io.cartel.noord.brabant.domain.repositories.DiffSideRepository;
+import io.cartel.noord.brabant.api.enums.DiffResult;
+import io.cartel.noord.brabant.domain.enums.Side;
+import io.cartel.noord.brabant.shared.helpers.RandomHelper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,11 +20,7 @@ import org.mockito.Mock;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.ffdev.diff.api.enums.DiffResult.EQUAL;
-import static com.ffdev.diff.domain.enums.Side.LEFT;
-import static com.ffdev.diff.domain.enums.Side.RIGHT;
-import static com.ffdev.diff.shared.helpers.Base64Helper.encodeB64;
-import static com.ffdev.diff.shared.helpers.RandomHelper.*;
+import static io.cartel.noord.brabant.shared.helpers.Base64Helper.encodeB64;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,12 +60,12 @@ class DiffServiceTest {
         @Test
         @DisplayName("should persist received data")
         public void shouldPersist() {
-            var testId = uuid();
-            var testData = json();
+            var testId = RandomHelper.uuid();
+            var testData = RandomHelper.json();
 
             service.saveLeft(testId, encodeB64(testData));
 
-            verify(sideRepository).save(eq(new DiffSide(LEFT, testId, testData)));
+            verify(sideRepository).save(eq(new DiffSide(Side.LEFT, testId, testData)));
         }
 
         @Test
@@ -73,7 +73,7 @@ class DiffServiceTest {
         public void shouldThrowB64Exception() {
             assertThrows(
                     InvalidBase64Exception.class,
-                    () -> service.saveLeft(uuid(), json())
+                    () -> service.saveLeft(RandomHelper.uuid(), RandomHelper.json())
             );
 
             verifyNoInteractions(sideRepository);
@@ -84,7 +84,7 @@ class DiffServiceTest {
         public void shouldThrowJSONException() {
             assertThrows(
                     InvalidJsonException.class,
-                    () -> service.saveLeft(uuid(), encodeB64(string()))
+                    () -> service.saveLeft(RandomHelper.uuid(), encodeB64(RandomHelper.string()))
             );
 
             verifyNoInteractions(sideRepository);
@@ -98,12 +98,12 @@ class DiffServiceTest {
         @Test
         @DisplayName("should persist received data")
         public void shouldPersist() {
-            var testId = uuid();
-            var testData = json();
+            var testId = RandomHelper.uuid();
+            var testData = RandomHelper.json();
 
             service.saveRight(testId, encodeB64(testData));
 
-            verify(sideRepository).save(eq(new DiffSide(RIGHT, testId, testData)));
+            verify(sideRepository).save(eq(new DiffSide(Side.RIGHT, testId, testData)));
         }
 
         @Test
@@ -111,7 +111,7 @@ class DiffServiceTest {
         public void shouldThrowB64Exception() {
             assertThrows(
                     InvalidBase64Exception.class,
-                    () -> service.saveRight(uuid(), json())
+                    () -> service.saveRight(RandomHelper.uuid(), RandomHelper.json())
             );
 
             verifyNoInteractions(sideRepository);
@@ -122,7 +122,7 @@ class DiffServiceTest {
         public void shouldThrowJSONException() {
             assertThrows(
                     InvalidJsonException.class,
-                    () -> service.saveRight(uuid(), encodeB64(string()))
+                    () -> service.saveRight(RandomHelper.uuid(), encodeB64(RandomHelper.string()))
             );
 
             verifyNoInteractions(sideRepository);
@@ -136,9 +136,9 @@ class DiffServiceTest {
         @Test
         @DisplayName("should throw an exception if left side is not found")
         public void shouldThrowNotFoundForLeftSides() {
-            var testId = uuid();
+            var testId = RandomHelper.uuid();
 
-            withDiffSides(testId, null, json());
+            withDiffSides(testId, null, RandomHelper.json());
 
             assertThrows(DiffSideNotFoundException.class, () -> service.getById(testId));
         }
@@ -146,9 +146,9 @@ class DiffServiceTest {
         @Test
         @DisplayName("should throw an exception if right side is not found")
         public void shouldThrowNotFoundForRightSides() {
-            var testId = uuid();
+            var testId = RandomHelper.uuid();
 
-            withDiffSides(testId, json(), null);
+            withDiffSides(testId, RandomHelper.json(), null);
 
             assertThrows(DiffSideNotFoundException.class, () -> service.getById(testId));
         }
@@ -156,26 +156,26 @@ class DiffServiceTest {
         @Test
         @DisplayName("should return diff when both sides are present")
         public void shouldReturnDiff() {
-            var testId = uuid();
-            var testData = json();
+            var testId = RandomHelper.uuid();
+            var testData = RandomHelper.json();
 
             withDiffSides(testId, testData, testData);
 
             var expectedDiff = withCheckedDiffFor(testData);
 
-            assertEquals(expectedDiff, service.getById(testId));
+            Assertions.assertEquals(expectedDiff, service.getById(testId));
         }
 
         private void withDiffSides(UUID id, String left, String right) {
-            when(sideRepository.fetchDataBySideAndDiffId(eq(LEFT), eq(id)))
+            when(sideRepository.fetchDataBySideAndDiffId(eq(Side.LEFT), eq(id)))
                     .thenReturn(Optional.ofNullable(left));
 
-            when(sideRepository.fetchDataBySideAndDiffId(eq(RIGHT), eq(id)))
+            when(sideRepository.fetchDataBySideAndDiffId(eq(Side.RIGHT), eq(id)))
                     .thenReturn(Optional.ofNullable(right));
         }
 
         private DiffResponse withCheckedDiffFor(String testData) {
-            var fakeDiff = new DiffResponse(EQUAL, singletonList(new Difference(30L, 6L)));
+            var fakeDiff = new DiffResponse(DiffResult.EQUAL, singletonList(new Difference(30L, 6L)));
 
             when(checkService.getDiff(eq(testData), eq(testData)))
                     .thenReturn(fakeDiff);

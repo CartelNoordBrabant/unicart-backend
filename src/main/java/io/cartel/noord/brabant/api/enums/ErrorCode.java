@@ -1,4 +1,4 @@
-package com.ffdev.diff.api.enums;
+package io.cartel.noord.brabant.api.enums;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -1,9 +1,10 @@
-package com.ffdev.diff.domain.services;
+package io.cartel.noord.brabant.domain.services;
 
+import io.cartel.noord.brabant.api.enums.DiffResult;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.ffdev.diff.api.enums.DiffResult.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,8 +26,8 @@ class DiffCheckServiceTest {
     public void shouldReturnEqual() {
         var result = service.getDiff("some-data", "some-data");
 
-        assertEquals(EQUAL, result.result());
-        assertTrue(result.differences().isEmpty());
+        Assertions.assertEquals(DiffResult.EQUAL, result.result());
+        Assertions.assertTrue(result.differences().isEmpty());
     }
 
     @Test
@@ -35,10 +36,10 @@ class DiffCheckServiceTest {
         var result = service.getDiff("some-data", "other-data");
 
         // some-data (9 chars) != other-data (10 chars)
-        assertEquals(DIFFERENT_SIZES, result.result());
+        Assertions.assertEquals(DiffResult.DIFFERENT_SIZES, result.result());
 
         // no differences are identified at the moment
-        assertTrue(result.differences().isEmpty());
+        Assertions.assertTrue(result.differences().isEmpty());
     }
 
     @Test
@@ -52,11 +53,11 @@ class DiffCheckServiceTest {
 
         var result = service.getDiff(lData, rData);
 
-        assertEquals(DIFFERENT, result.result());
-        assertEquals(1, result.differences().size());
+        Assertions.assertEquals(DiffResult.DIFFERENT, result.result());
+        Assertions.assertEquals(1, result.differences().size());
         // som >> cen
-        assertEquals(0L, result.differences().get(0).offset());
-        assertEquals(3L, result.differences().get(0).length());
+        Assertions.assertEquals(0L, result.differences().get(0).offset());
+        Assertions.assertEquals(3L, result.differences().get(0).length());
     }
 
     @Test
@@ -70,11 +71,11 @@ class DiffCheckServiceTest {
 
         var result = service.getDiff(lData, rData);
 
-        assertEquals(DIFFERENT, result.result());
-        assertEquals(1, result.differences().size());
+        Assertions.assertEquals(DiffResult.DIFFERENT, result.result());
+        Assertions.assertEquals(1, result.differences().size());
         // data >> yolo
-        assertEquals(5L, result.differences().get(0).offset());
-        assertEquals(4L, result.differences().get(0).length());
+        Assertions.assertEquals(5L, result.differences().get(0).offset());
+        Assertions.assertEquals(4L, result.differences().get(0).length());
     }
 
     @Test
@@ -88,11 +89,11 @@ class DiffCheckServiceTest {
 
         var result = service.getDiff(lData, rData);
 
-        assertEquals(DIFFERENT, result.result());
-        assertEquals(1, result.differences().size());
+        Assertions.assertEquals(DiffResult.DIFFERENT, result.result());
+        Assertions.assertEquals(1, result.differences().size());
         // me-da >> lo:be
-        assertEquals(2L, result.differences().get(0).offset());
-        assertEquals(5L, result.differences().get(0).length());
+        Assertions.assertEquals(2L, result.differences().get(0).offset());
+        Assertions.assertEquals(5L, result.differences().get(0).length());
     }
 
     @Test
@@ -106,10 +107,10 @@ class DiffCheckServiceTest {
 
         var result = service.getDiff(lData, rData);
 
-        assertEquals(DIFFERENT, result.result());
-        assertEquals(1, result.differences().size());
-        assertEquals(0L, result.differences().get(0).offset());
-        assertEquals(9L, result.differences().get(0).length());
+        Assertions.assertEquals(DiffResult.DIFFERENT, result.result());
+        Assertions.assertEquals(1, result.differences().size());
+        Assertions.assertEquals(0L, result.differences().get(0).offset());
+        Assertions.assertEquals(9L, result.differences().get(0).length());
     }
 
     @Test
@@ -123,16 +124,16 @@ class DiffCheckServiceTest {
 
         var result = service.getDiff(lData, rData);
 
-        assertEquals(DIFFERENT, result.result());
-        assertEquals(3, result.differences().size());
+        Assertions.assertEquals(DiffResult.DIFFERENT, result.result());
+        Assertions.assertEquals(3, result.differences().size());
         // s >> i
-        assertEquals(0L, result.differences().get(0).offset());
-        assertEquals(1L, result.differences().get(0).length());
+        Assertions.assertEquals(0L, result.differences().get(0).offset());
+        Assertions.assertEquals(1L, result.differences().get(0).length());
         // me >> ta
-        assertEquals(2L, result.differences().get(1).offset());
-        assertEquals(2L, result.differences().get(1).length());
+        Assertions.assertEquals(2L, result.differences().get(1).offset());
+        Assertions.assertEquals(2L, result.differences().get(1).length());
         // dat >> bel
-        assertEquals(5L, result.differences().get(2).offset());
-        assertEquals(3L, result.differences().get(2).length());
+        Assertions.assertEquals(5L, result.differences().get(2).offset());
+        Assertions.assertEquals(3L, result.differences().get(2).length());
     }
 }

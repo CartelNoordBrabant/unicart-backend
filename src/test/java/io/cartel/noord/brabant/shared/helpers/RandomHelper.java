@@ -1,4 +1,4 @@
-package com.ffdev.diff.shared.helpers;
+package io.cartel.noord.brabant.shared.helpers;
 
 import java.util.Random;
 import java.util.UUID;

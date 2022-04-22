@@ -1,6 +1,6 @@
-package com.ffdev.diff.domain.exceptions;
+package io.cartel.noord.brabant.domain.exceptions;
 
-import com.ffdev.diff.domain.enums.Side;
+import io.cartel.noord.brabant.domain.enums.Side;
 import org.jetbrains.annotations.NotNull;
 
 /**

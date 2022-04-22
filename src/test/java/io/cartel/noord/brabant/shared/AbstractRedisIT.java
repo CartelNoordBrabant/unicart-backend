@@ -1,4 +1,4 @@
-package com.ffdev.diff.shared;
+package io.cartel.noord.brabant.shared;
 
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;

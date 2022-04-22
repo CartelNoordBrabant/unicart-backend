@@ -1,8 +1,12 @@
-package com.ffdev.diff.api.controllers;
+package io.cartel.noord.brabant.api.controllers;
 
-import com.ffdev.diff.api.dtos.DiffResponse;
-import com.ffdev.diff.api.dtos.ErrorResponse;
-import com.ffdev.diff.shared.AbstractRedisIT;
+import io.cartel.noord.brabant.api.dtos.DiffResponse;
+import io.cartel.noord.brabant.api.dtos.ErrorResponse;
+import io.cartel.noord.brabant.shared.AbstractRedisIT;
+import io.cartel.noord.brabant.api.enums.DiffResult;
+import io.cartel.noord.brabant.api.enums.ErrorCode;
+import io.cartel.noord.brabant.shared.helpers.RandomHelper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
-import static com.ffdev.diff.api.enums.DiffResult.*;
-import static com.ffdev.diff.api.enums.ErrorCode.*;
-import static com.ffdev.diff.shared.helpers.Base64Helper.encodeB64;
-import static com.ffdev.diff.shared.helpers.RandomHelper.*;
+import static io.cartel.noord.brabant.shared.helpers.Base64Helper.encodeB64;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
 
@@ -46,48 +47,48 @@ class DiffControllerIT extends AbstractRedisIT {
         @Test
         @DisplayName("with 400 if left side is not Base64")
         public void shouldReturn400IfLeftNotBase64() {
-            var response = postLeft(uuid(), json(), ErrorResponse.class);
+            var response = postLeft(RandomHelper.uuid(), RandomHelper.json(), ErrorResponse.class);
             assertEquals(BAD_REQUEST, response.getStatusCode());
 
             var error = response.getBody();
             assertNotNull(error);
-            assertEquals(BASE64_INVALID, error.code());
+            Assertions.assertEquals(ErrorCode.BASE64_INVALID, error.code());
             assertEquals("Invalid base 64 data", error.message());
         }
 
         @Test
         @DisplayName("with 400 if right side is not Base64")
         public void shouldReturn400IfRightNotBase64() {
-            var response = postRight(uuid(), json(), ErrorResponse.class);
+            var response = postRight(RandomHelper.uuid(), RandomHelper.json(), ErrorResponse.class);
             assertEquals(BAD_REQUEST, response.getStatusCode());
 
             var error = response.getBody();
             assertNotNull(error);
-            assertEquals(BASE64_INVALID, error.code());
+            Assertions.assertEquals(ErrorCode.BASE64_INVALID, error.code());
             assertEquals("Invalid base 64 data", error.message());
         }
 
         @Test
         @DisplayName("with 400 if left side is not JSON")
         public void shouldReturn400IfLeftNotJSON() {
-            var response = postLeft(uuid(), encodeB64(string()), ErrorResponse.class);
+            var response = postLeft(RandomHelper.uuid(), encodeB64(RandomHelper.string()), ErrorResponse.class);
             assertEquals(BAD_REQUEST, response.getStatusCode());
 
             var error = response.getBody();
             assertNotNull(error);
-            assertEquals(JSON_INVALID, error.code());
+            assertEquals(ErrorCode.JSON_INVALID, error.code());
             assertEquals("Invalid JSON data", error.message());
         }
 
         @Test
         @DisplayName("with 400 if right side is not JSON")
         public void shouldReturn400IfRightNotJSON() {
-            var response = postRight(uuid(), encodeB64(string()), ErrorResponse.class);
+            var response = postRight(RandomHelper.uuid(), encodeB64(RandomHelper.string()), ErrorResponse.class);
             assertEquals(BAD_REQUEST, response.getStatusCode());
 
             var error = response.getBody();
             assertNotNull(error);
-            assertEquals(JSON_INVALID, error.code());
+            assertEquals(ErrorCode.JSON_INVALID, error.code());
             assertEquals("Invalid JSON data", error.message());
         }
     }
@@ -99,8 +100,8 @@ class DiffControllerIT extends AbstractRedisIT {
         @Test
         @DisplayName("with 404 if right side is missing")
         public void shouldReturn404IfNoRightSide() {
-            var testId = uuid();
-            var testData = encodeB64(json());
+            var testId = RandomHelper.uuid();
+            var testData = encodeB64(RandomHelper.json());
 
             assertEquals(ACCEPTED, postLeft(testId, testData));
 
@@ -109,15 +110,15 @@ class DiffControllerIT extends AbstractRedisIT {
 
             var error = response.getBody();
             assertNotNull(error);
-            assertEquals(RIGHT_NOT_FOUND, error.code());
+            Assertions.assertEquals(ErrorCode.RIGHT_NOT_FOUND, error.code());
             assertEquals("Diff right side was not found", error.message());
         }
 
         @Test
         @DisplayName("with 404 if left side is missing")
         public void shouldReturn404IfNoLeftSide() {
-            var testId = uuid();
-            var testData = encodeB64(json());
+            var testId = RandomHelper.uuid();
+            var testData = encodeB64(RandomHelper.json());
 
             assertEquals(ACCEPTED, postRight(testId, testData));
 
@@ -126,7 +127,7 @@ class DiffControllerIT extends AbstractRedisIT {
 
             var error = response.getBody();
             assertNotNull(error);
-            assertEquals(LEFT_NOT_FOUND, error.code());
+            Assertions.assertEquals(ErrorCode.LEFT_NOT_FOUND, error.code());
             assertEquals("Diff left side was not found", error.message());
         }
     }
@@ -138,8 +139,8 @@ class DiffControllerIT extends AbstractRedisIT {
         @Test
         @DisplayName("and result EQUAL when both sides are the same")
         public void shouldReturn200WhenEqual() {
-            var testId = uuid();
-            var testData = encodeB64(json());
+            var testId = RandomHelper.uuid();
+            var testData = encodeB64(RandomHelper.json());
 
             assertEquals(ACCEPTED, postLeft(testId, testData));
             assertEquals(ACCEPTED, postRight(testId, testData));
@@ -149,14 +150,14 @@ class DiffControllerIT extends AbstractRedisIT {
 
             var diff = response.getBody();
             assertNotNull(diff);
-            assertEquals(EQUAL, diff.result());
+            Assertions.assertEquals(DiffResult.EQUAL, diff.result());
             assertTrue(diff.differences().isEmpty());
         }
 
         @Test
         @DisplayName("and result DIFFERENT_SIZES when sides are not equivalent in length")
         public void shouldReturn200WhenDifferentSizes() {
-            var testId = uuid();
+            var testId = RandomHelper.uuid();
             var leftData = "{\"id\":123,\"message\":\"some-data\"}";
             var rightData = "{\"id\":132,\"message\":\"other-data\"}";
 
@@ -168,14 +169,14 @@ class DiffControllerIT extends AbstractRedisIT {
 
             var diff = response.getBody();
             assertNotNull(diff);
-            assertEquals(DIFFERENT_SIZES, diff.result());
+            Assertions.assertEquals(DiffResult.DIFFERENT_SIZES, diff.result());
             assertTrue(diff.differences().isEmpty());
         }
 
         @Test
         @DisplayName("and result DIFFERENT when sides are the same size but not equal")
         public void shouldReturn200WhenDifferent() {
-            var testId = uuid();
+            var testId = RandomHelper.uuid();
             var lData = "{\"id\":123,\"message\":\"some json\"}";
             //                      ||     |               ||||
             var rData = "{\"id\":213,\"massage\":\"some JSON\"}";
@@ -188,7 +189,7 @@ class DiffControllerIT extends AbstractRedisIT {
 
             var diff = response.getBody();
             assertNotNull(diff);
-            assertEquals(DIFFERENT, diff.result());
+            Assertions.assertEquals(DiffResult.DIFFERENT, diff.result());
             assertEquals(3, diff.differences().size());
             // 12 >> 21
             assertEquals(6L, diff.differences().get(0).offset());
@@ -209,8 +210,8 @@ class DiffControllerIT extends AbstractRedisIT {
         @Test
         @DisplayName("should not change diff in subsequent request")
         public void shouldReturn200WithCache() {
-            var testId = uuid();
-            var testData = encodeB64(json());
+            var testId = RandomHelper.uuid();
+            var testData = encodeB64(RandomHelper.json());
 
             assertEquals(ACCEPTED, postLeft(testId, testData));
             assertEquals(ACCEPTED, postRight(testId, testData));
@@ -227,8 +228,8 @@ class DiffControllerIT extends AbstractRedisIT {
         @Test
         @DisplayName("should evict and recalculate diff if one of its sides changed")
         public void shouldRecalculateDiff() {
-            var testId = uuid();
-            var testData = encodeB64(json());
+            var testId = RandomHelper.uuid();
+            var testData = encodeB64(RandomHelper.json());
 
             assertEquals(ACCEPTED, postLeft(testId, testData));
             assertEquals(ACCEPTED, postRight(testId, testData));
@@ -236,7 +237,7 @@ class DiffControllerIT extends AbstractRedisIT {
             var response = getDiff(testId, DiffResponse.class);
             assertEquals(OK, response.getStatusCode());
 
-            assertEquals(ACCEPTED, postLeft(testId, encodeB64(json())));
+            assertEquals(ACCEPTED, postLeft(testId, encodeB64(RandomHelper.json())));
 
             var newResponse = getDiff(testId, DiffResponse.class);
             assertEquals(OK, newResponse.getStatusCode());
@@ -247,8 +248,8 @@ class DiffControllerIT extends AbstractRedisIT {
         @Test
         @DisplayName("last diff should still be available if new diff side post errors out")
         public void shouldNotRecalculateDiff() {
-            var testId = uuid();
-            var testData = encodeB64(json());
+            var testId = RandomHelper.uuid();
+            var testData = encodeB64(RandomHelper.json());
 
             assertEquals(ACCEPTED, postLeft(testId, testData));
             assertEquals(ACCEPTED, postRight(testId, testData));
@@ -256,7 +257,7 @@ class DiffControllerIT extends AbstractRedisIT {
             var response = getDiff(testId, DiffResponse.class);
             assertEquals(OK, response.getStatusCode());
 
-            assertEquals(BAD_REQUEST, postLeft(testId, string()));
+            assertEquals(BAD_REQUEST, postLeft(testId, RandomHelper.string()));
 
             var cacheResponse = getDiff(testId, DiffResponse.class);
             assertEquals(OK, cacheResponse.getStatusCode());

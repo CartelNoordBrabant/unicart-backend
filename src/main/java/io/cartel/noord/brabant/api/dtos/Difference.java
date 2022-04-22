@@ -1,4 +1,4 @@
-package com.ffdev.diff.api.dtos;
+package io.cartel.noord.brabant.api.dtos;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.swagger.v3.oas.annotations.media.Schema;

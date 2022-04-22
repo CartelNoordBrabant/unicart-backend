@@ -1,22 +1,22 @@
-package com.ffdev.diff.api.controllers;
+package io.cartel.noord.brabant.api.controllers;
 
-import com.ffdev.diff.api.dtos.ErrorResponse;
-import com.ffdev.diff.domain.exceptions.DiffSideNotFoundException;
-import com.ffdev.diff.domain.exceptions.InvalidBase64Exception;
-import com.ffdev.diff.domain.exceptions.InvalidJsonException;
+import io.cartel.noord.brabant.api.dtos.ErrorResponse;
+import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
+import io.cartel.noord.brabant.domain.exceptions.InvalidBase64Exception;
+import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static com.ffdev.diff.api.enums.ErrorCode.*;
-import static com.ffdev.diff.domain.enums.Side.LEFT;
+import static io.cartel.noord.brabant.api.enums.ErrorCode.*;
+import static io.cartel.noord.brabant.domain.enums.Side.LEFT;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
- * Provides a JSON {@link com.ffdev.diff.api.dtos.ErrorResponse ErrorResponse}
+ * Provides a JSON {@link ErrorResponse ErrorResponse}
  * for known application errors extending {@link ControllerAdvice @ControllerAdvice}
  * for exception handling.
  *

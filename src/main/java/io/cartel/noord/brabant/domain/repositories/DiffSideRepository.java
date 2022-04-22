@@ -1,7 +1,7 @@
-package com.ffdev.diff.domain.repositories;
+package io.cartel.noord.brabant.domain.repositories;
 
-import com.ffdev.diff.domain.entities.DiffSide;
-import com.ffdev.diff.domain.enums.Side;
+import io.cartel.noord.brabant.domain.entities.DiffSide;
+import io.cartel.noord.brabant.domain.enums.Side;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;

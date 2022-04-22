@@ -1,6 +1,6 @@
-package com.ffdev.diff.shared.helpers;
+package io.cartel.noord.brabant.shared.helpers;
 
-import com.ffdev.diff.domain.exceptions.InvalidBase64Exception;
+import io.cartel.noord.brabant.domain.exceptions.InvalidBase64Exception;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Base64;

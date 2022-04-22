@@ -1,4 +1,4 @@
-package com.ffdev.diff.domain.enums;
+package io.cartel.noord.brabant.domain.enums;
 
 /**
  * {@link Side} represents a side of a diff.

@@ -1,7 +1,7 @@
-package com.ffdev.diff.api.controllers;
+package io.cartel.noord.brabant.api.controllers;
 
-import com.ffdev.diff.api.dtos.DiffResponse;
-import com.ffdev.diff.domain.services.DiffService;
+import io.cartel.noord.brabant.api.dtos.DiffResponse;
+import io.cartel.noord.brabant.domain.services.DiffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;

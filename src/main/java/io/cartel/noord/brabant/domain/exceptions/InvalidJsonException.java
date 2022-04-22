@@ -1,4 +1,4 @@
-package com.ffdev.diff.domain.exceptions;
+package io.cartel.noord.brabant.domain.exceptions;
 
 /**
  * {@link InvalidJsonException} thrown when a JSON string cannot be deserialized.

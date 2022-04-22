@@ -1,4 +1,4 @@
-package com.ffdev.diff.shared.helpers;
+package io.cartel.noord.brabant.shared.helpers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;

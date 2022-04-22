@@ -1,7 +1,9 @@
-package com.ffdev.diff.domain.repositories;
+package io.cartel.noord.brabant.domain.repositories;
 
-import com.ffdev.diff.domain.entities.DiffSide;
-import com.ffdev.diff.shared.AbstractRedisIT;
+import io.cartel.noord.brabant.domain.entities.DiffSide;
+import io.cartel.noord.brabant.shared.AbstractRedisIT;
+import io.cartel.noord.brabant.domain.enums.Side;
+import io.cartel.noord.brabant.shared.helpers.RandomHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -16,9 +18,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-import static com.ffdev.diff.domain.enums.Side.LEFT;
-import static com.ffdev.diff.domain.enums.Side.RIGHT;
-import static com.ffdev.diff.shared.helpers.RandomHelper.uuid;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -114,10 +113,10 @@ class DiffSideRepositoryIT extends AbstractRedisIT {
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) {
             return Stream.of(
-                    new DiffSide(LEFT, uuid(), "{\"id\":123,\"message\":\"some json\"}"),
-                    new DiffSide(RIGHT, uuid(), "some plain text"),
-                    new DiffSide(RIGHT, uuid(), "<html><head></head><body><h1>some html</h1></body></html>"),
-                    new DiffSide(LEFT, uuid(), "7B2EUCQfTVqbDyEYySKs444Gex/SxMewVBP5MPbS3ktgmxwwzGEaB")
+                    new DiffSide(Side.LEFT, RandomHelper.uuid(), "{\"id\":123,\"message\":\"some json\"}"),
+                    new DiffSide(Side.RIGHT, RandomHelper.uuid(), "some plain text"),
+                    new DiffSide(Side.RIGHT, RandomHelper.uuid(), "<html><head></head><body><h1>some html</h1></body></html>"),
+                    new DiffSide(Side.LEFT, RandomHelper.uuid(), "7B2EUCQfTVqbDyEYySKs444Gex/SxMewVBP5MPbS3ktgmxwwzGEaB")
             ).map(Arguments::of);
         }
     }

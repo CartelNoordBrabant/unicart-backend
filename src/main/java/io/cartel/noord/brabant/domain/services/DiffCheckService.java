@@ -1,14 +1,14 @@
-package com.ffdev.diff.domain.services;
+package io.cartel.noord.brabant.domain.services;
 
-import com.ffdev.diff.api.dtos.DiffResponse;
-import com.ffdev.diff.api.dtos.Difference;
+import io.cartel.noord.brabant.api.dtos.DiffResponse;
+import io.cartel.noord.brabant.api.dtos.Difference;
+import io.cartel.noord.brabant.api.enums.DiffResult;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ffdev.diff.api.enums.DiffResult.*;
 import static java.util.Collections.emptyList;
 
 /**
@@ -27,14 +27,14 @@ public class DiffCheckService {
     public DiffResponse getDiff(@NotNull String left, @NotNull String right) {
 
         if (left.length() != right.length()) {
-            return new DiffResponse(DIFFERENT_SIZES, emptyList());
+            return new DiffResponse(DiffResult.DIFFERENT_SIZES, emptyList());
         }
 
         if (left.equals(right)) {
-            return new DiffResponse(EQUAL, emptyList());
+            return new DiffResponse(DiffResult.EQUAL, emptyList());
         }
 
-        return new DiffResponse(DIFFERENT, calculateDiff(left, right));
+        return new DiffResponse(DiffResult.DIFFERENT, calculateDiff(left, right));
     }
 
     /**

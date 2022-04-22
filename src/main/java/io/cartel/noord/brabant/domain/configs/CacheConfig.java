@@ -1,4 +1,4 @@
-package com.ffdev.diff.domain.configs;
+package io.cartel.noord.brabant.domain.configs;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;

@@ -1,4 +1,4 @@
-package com.ffdev.diff.api.configs;
+package io.cartel.noord.brabant.api.configs;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;

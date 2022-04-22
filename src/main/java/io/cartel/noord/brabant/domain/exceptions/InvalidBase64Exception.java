@@ -1,4 +1,4 @@
-package com.ffdev.diff.domain.exceptions;
+package io.cartel.noord.brabant.domain.exceptions;
 
 /**
  * {@link InvalidBase64Exception} thrown when base64 string cannot be decoded.
