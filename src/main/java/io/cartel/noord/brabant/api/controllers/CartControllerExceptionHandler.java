@@ -1,5 +1,6 @@
 package io.cartel.noord.brabant.api.controllers;
 
+import io.cartel.noord.brabant.api.dtos.ErrorResponse;
 import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
 import io.cartel.noord.brabant.domain.exceptions.InvalidBase64Exception;
 import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
