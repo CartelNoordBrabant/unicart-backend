@@ -7,37 +7,50 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cartel.noord.brabant.domain.entities.Cart;
 import io.cartel.noord.brabant.domain.entities.Item;
 import io.cartel.noord.brabant.domain.entities.Provider;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CartRepository {
 
-    private final StringRedisTemplate redisTemplate;
+    private static final String CUSTOMER_FIELD = "customer";
+
+    private final HashOperations<String, String, String> redisHash;
+    private final SetOperations<String, String> redisSet;
     private final ObjectMapper mapper;
 
     public CartRepository(StringRedisTemplate redisTemplate, ObjectMapper mapper) {
-        this.redisTemplate = redisTemplate;
         this.mapper = mapper;
+        this.redisHash = redisTemplate.opsForHash();
+        this.redisSet = redisTemplate.opsForSet();
     }
 
     public void addItem(
         @NotNull UUID id,
-        @NotNull String provider,
+        @NotNull String providerId,
+        @NotNull UUID customerId,
         @NotNull Item item
     ) {
         try {
 
             var itemJson = mapper.writeValueAsString(item);
 
-            redisTemplate.opsForSet()
-                .add(cartKey(id), provider);
+            redisSet.add(cartKey(id), providerId);
 
-            redisTemplate.opsForHash()
-                .put(providerKey(id, provider), item.code(), itemJson);
+            redisHash.putAll(
+                providerKey(id, providerId),
+                Map.of(
+                    CUSTOMER_FIELD, customerId.toString(),
+                    item.code(), itemJson
+                )
+            );
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -46,27 +59,43 @@ public class CartRepository {
 
     public void removeItem(
         @NotNull UUID id,
-        @NotNull String provider,
+        @NotNull String providerId,
         @NotNull String code
     ) {
-        redisTemplate.opsForHash()
-            .delete(providerKey(id, provider), code);
+        redisHash.delete(providerKey(id, providerId), code);
     }
 
     public Cart getCart(@NotNull UUID id) {
-        var providerIds = redisTemplate.opsForSet().members(cartKey(id));
+        var providerIds = redisSet.members(cartKey(id));
         if (providerIds == null) {
             return null;
         }
 
         var providers = providerIds.stream()
-            .map(provider -> {
-                var items = redisTemplate.opsForHash()
-                    .values(providerKey(id, provider))
+            .map(providerId -> {
+                var providerCart = redisHash.entries(providerKey(id, providerId));
+
+                if (providerCart == null || providerCart.isEmpty()) {
+                    return null;
+                }
+
+                var customerId = Optional.ofNullable(providerCart.get(CUSTOMER_FIELD))
+                    .map(UUID::fromString)
+                    .orElse(null);
+
+                if (customerId == null) {
+                    return null;
+                }
+
+                var items = providerCart.entrySet()
                     .stream()
-                    .map(item -> {
+                    .map(entry -> {
+                        if (CUSTOMER_FIELD.equals(entry.getKey())) {
+                            return null;
+                        }
+
                         try {
-                            return mapper.readValue(item.toString(), Item.class);
+                            return mapper.readValue(entry.getValue(), Item.class);
                         } catch (JsonProcessingException e) {
                             e.printStackTrace();
                             return null;
@@ -74,8 +103,10 @@ public class CartRepository {
                     })
                     .filter(Objects::nonNull)
                     .collect(toList());
-                return new Provider(provider, items);
+
+                return new Provider(providerId, customerId, items);
             })
+            .filter(Objects::nonNull)
             .collect(toList());
 
         return new Cart(id, providers);

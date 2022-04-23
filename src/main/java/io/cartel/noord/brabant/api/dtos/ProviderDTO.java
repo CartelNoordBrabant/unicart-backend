@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonAutoDetect(fieldVisibility = ANY)
 public record ProviderDTO(
-    @NotNull String provider,
+    @NotNull String id,
     @NotNull List<ItemDTO> items
 ) implements Serializable {
 }

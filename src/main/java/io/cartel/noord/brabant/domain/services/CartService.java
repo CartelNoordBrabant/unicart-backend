@@ -18,18 +18,19 @@ public class CartService {
 
     public void addItem(
         @NotNull UUID id,
-        @NotNull String provider,
+        @NotNull String providerId,
+        @NotNull UUID customerId,
         @NotNull Item item
     ) {
-        repository.addItem(id, provider, item);
+        repository.addItem(id, providerId, customerId, item);
     }
 
     public void removeItem(
         @NotNull UUID id,
-        @NotNull String provider,
+        @NotNull String providerId,
         @NotNull String code
     ) {
-        repository.removeItem(id, provider, code);
+        repository.removeItem(id, providerId, code);
     }
 
     public Cart getCart(@NotNull UUID id) {

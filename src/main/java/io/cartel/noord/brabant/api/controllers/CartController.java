@@ -2,6 +2,7 @@ package io.cartel.noord.brabant.api.controllers;
 
 import static java.util.stream.Collectors.toList;
 
+import io.cartel.noord.brabant.api.dtos.AddItemDTO;
 import io.cartel.noord.brabant.api.dtos.CartDTO;
 import io.cartel.noord.brabant.api.dtos.ItemDTO;
 import io.cartel.noord.brabant.api.dtos.ProviderDTO;
@@ -28,22 +29,22 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("{id}/provider/{provider}")
+    @PostMapping("{id}/provider/{providerId}")
     public void addItem(
         @PathVariable UUID id,
-        @PathVariable String provider,
-        @RequestBody ItemDTO payload
+        @PathVariable String providerId,
+        @RequestBody AddItemDTO payload
     ) {
-        cartService.addItem(id, provider, mapFromDTO(payload));
+        cartService.addItem(id, providerId, payload.customerId(), mapFromDTO(payload.item()));
     }
 
-    @DeleteMapping("{id}/provider/{provider}/item/{code}")
+    @DeleteMapping("{id}/provider/{providerId}/item/{itemCode}")
     public void removeItem(
         @PathVariable UUID id,
-        @PathVariable String provider,
-        @PathVariable String code
+        @PathVariable String providerId,
+        @PathVariable String itemCode
     ) {
-        cartService.removeItem(id, provider, code);
+        cartService.removeItem(id, providerId, itemCode);
     }
 
     @GetMapping("{id}")
@@ -67,7 +68,7 @@ public class CartController {
 
     private ProviderDTO mapToDTO(Provider provider) {
         return new ProviderDTO(
-            provider.provider(),
+            provider.id(),
             provider.items()
                 .stream()
                 .map(this::mapToDTO)
