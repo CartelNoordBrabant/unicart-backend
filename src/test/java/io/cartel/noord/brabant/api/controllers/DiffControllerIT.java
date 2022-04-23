@@ -1,7 +1,6 @@
 package io.cartel.noord.brabant.api.controllers;
 
 import io.cartel.noord.brabant.shared.AbstractRedisIT;
-import io.cartel.noord.brabant.api.enums.DiffResult;
 import io.cartel.noord.brabant.api.enums.ErrorCode;
 import io.cartel.noord.brabant.shared.helpers.RandomHelper;
 import org.junit.jupiter.api.Assertions;

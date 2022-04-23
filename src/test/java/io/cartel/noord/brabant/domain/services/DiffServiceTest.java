@@ -1,11 +1,10 @@
 package io.cartel.noord.brabant.domain.services;
 
-import io.cartel.noord.brabant.domain.entities.DiffSide;
+import io.cartel.noord.brabant.domain.entities.Item;
 import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
 import io.cartel.noord.brabant.domain.exceptions.InvalidBase64Exception;
 import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
 import io.cartel.noord.brabant.domain.repositories.ChartRepository;
-import io.cartel.noord.brabant.api.enums.DiffResult;
 import io.cartel.noord.brabant.domain.enums.Side;
 import io.cartel.noord.brabant.shared.helpers.RandomHelper;
 import org.junit.jupiter.api.Assertions;
@@ -63,7 +62,7 @@ class DiffServiceTest {
 
             service.saveLeft(testId, encodeB64(testData));
 
-            verify(sideRepository).save(eq(new DiffSide(Side.LEFT, testId, testData)));
+            verify(sideRepository).save(eq(new Item(Side.LEFT, testId, testData)));
         }
 
         @Test
@@ -101,7 +100,7 @@ class DiffServiceTest {
 
             service.saveRight(testId, encodeB64(testData));
 
-            verify(sideRepository).save(eq(new DiffSide(Side.RIGHT, testId, testData)));
+            verify(sideRepository).save(eq(new Item(Side.RIGHT, testId, testData)));
         }
 
         @Test

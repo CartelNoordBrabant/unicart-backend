@@ -1,6 +1,6 @@
 package io.cartel.noord.brabant.domain.repositories;
 
-import io.cartel.noord.brabant.domain.entities.DiffSide;
+import io.cartel.noord.brabant.domain.entities.Item;
 import io.cartel.noord.brabant.shared.AbstractRedisIT;
 import io.cartel.noord.brabant.domain.enums.Side;
 import io.cartel.noord.brabant.shared.helpers.RandomHelper;
@@ -46,7 +46,7 @@ class ChartRepositoryIT extends AbstractRedisIT {
         @ParameterizedTest
         @ArgumentsSource(TestDataProvider.class)
         @DisplayName("should save diff side in a specific key")
-        public void shouldSave(DiffSide testData) {
+        public void shouldSave(Item testData) {
 
             repository.save(testData);
 
@@ -59,7 +59,7 @@ class ChartRepositoryIT extends AbstractRedisIT {
         @ParameterizedTest
         @ArgumentsSource(TestDataProvider.class)
         @DisplayName("should set a expiration time diff side data")
-        public void shouldExpire(DiffSide testData) {
+        public void shouldExpire(Item testData) {
 
             repository.save(testData);
 
@@ -78,7 +78,7 @@ class ChartRepositoryIT extends AbstractRedisIT {
         @ParameterizedTest
         @ArgumentsSource(TestDataProvider.class)
         @DisplayName("should find a specific key")
-        public void shouldFind(DiffSide testData) {
+        public void shouldFind(Item testData) {
             var key = testKey(testData);
             redisTemplate.opsForValue().set(key, testData.data());
 
@@ -91,7 +91,7 @@ class ChartRepositoryIT extends AbstractRedisIT {
         @ParameterizedTest
         @ArgumentsSource(TestDataProvider.class)
         @DisplayName("should return empty if a key does not exists")
-        public void shouldNotFind(DiffSide testData) {
+        public void shouldNotFind(Item testData) {
             var key = testKey(testData);
             redisTemplate.delete(key);
 
@@ -101,7 +101,7 @@ class ChartRepositoryIT extends AbstractRedisIT {
         }
     }
 
-    private String testKey(DiffSide testData) {
+    private String testKey(Item testData) {
         return "diff:" + testData.diffId() + ":" + testData.side().getId();
     }
 
@@ -113,10 +113,10 @@ class ChartRepositoryIT extends AbstractRedisIT {
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) {
             return Stream.of(
-                    new DiffSide(Side.LEFT, RandomHelper.uuid(), "{\"id\":123,\"message\":\"some json\"}"),
-                    new DiffSide(Side.RIGHT, RandomHelper.uuid(), "some plain text"),
-                    new DiffSide(Side.RIGHT, RandomHelper.uuid(), "<html><head></head><body><h1>some html</h1></body></html>"),
-                    new DiffSide(Side.LEFT, RandomHelper.uuid(), "7B2EUCQfTVqbDyEYySKs444Gex/SxMewVBP5MPbS3ktgmxwwzGEaB")
+                    new Item(Side.LEFT, RandomHelper.uuid(), "{\"id\":123,\"message\":\"some json\"}"),
+                    new Item(Side.RIGHT, RandomHelper.uuid(), "some plain text"),
+                    new Item(Side.RIGHT, RandomHelper.uuid(), "<html><head></head><body><h1>some html</h1></body></html>"),
+                    new Item(Side.LEFT, RandomHelper.uuid(), "7B2EUCQfTVqbDyEYySKs444Gex/SxMewVBP5MPbS3ktgmxwwzGEaB")
             ).map(Arguments::of);
         }
     }

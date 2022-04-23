@@ -1,6 +1,6 @@
 package io.cartel.noord.brabant.api.controllers;
 
-import io.cartel.noord.brabant.api.dtos.ErrorResponse;
+import io.cartel.noord.brabant.api.dtos.ErrorDTO;
 import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
 import io.cartel.noord.brabant.domain.exceptions.InvalidBase64Exception;
 import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
@@ -16,7 +16,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
- * Provides a JSON {@link ErrorResponse ErrorResponse}
+ * Provides a JSON {@link ErrorDTO ErrorResponse}
  * for known application errors extending {@link ControllerAdvice @ControllerAdvice}
  * for exception handling.
  *
@@ -33,25 +33,25 @@ public class CartControllerExceptionHandler extends ResponseEntityExceptionHandl
     @ExceptionHandler(DiffSideNotFoundException.class)
     @ResponseStatus(NOT_FOUND)
     @ResponseBody
-    public ErrorResponse handleDiffSideNotFoundException(DiffSideNotFoundException ex) {
+    public ErrorDTO handleDiffSideNotFoundException(DiffSideNotFoundException ex) {
         var errorCode = ex.getSide().equals(LEFT)
                 ? LEFT_NOT_FOUND
                 : RIGHT_NOT_FOUND;
 
-        return new ErrorResponse(errorCode, ex.getMessage());
+        return new ErrorDTO(errorCode, ex.getMessage());
     }
 
     @ExceptionHandler(InvalidBase64Exception.class)
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleInvalidBase64Exception(InvalidBase64Exception ex) {
-        return new ErrorResponse(BASE64_INVALID, ex.getMessage());
+    public ErrorDTO handleInvalidBase64Exception(InvalidBase64Exception ex) {
+        return new ErrorDTO(BASE64_INVALID, ex.getMessage());
     }
 
     @ExceptionHandler(InvalidJsonException.class)
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleInvalidJsonException(InvalidJsonException ex) {
-        return new ErrorResponse(JSON_INVALID, ex.getMessage());
+    public ErrorDTO handleInvalidJsonException(InvalidJsonException ex) {
+        return new ErrorDTO(JSON_INVALID, ex.getMessage());
     }
 }

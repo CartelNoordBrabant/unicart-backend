@@ -3,14 +3,13 @@ package io.cartel.noord.brabant.api.dtos;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import io.cartel.noord.brabant.api.enums.ErrorCode;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 @JsonAutoDetect(fieldVisibility = ANY)
-public record ProviderResponse(
-    @NotNull String provider,
-    @NotNull List<ItemPayload> items
+public record ErrorDTO(
+    @NotNull ErrorCode code,
+    @NotNull String message
 ) implements Serializable {
 }

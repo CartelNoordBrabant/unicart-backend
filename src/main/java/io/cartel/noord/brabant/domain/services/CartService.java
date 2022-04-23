@@ -4,9 +4,10 @@ import static java.util.stream.Collectors.toList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cartel.noord.brabant.api.dtos.CartResponse;
-import io.cartel.noord.brabant.api.dtos.ItemPayload;
-import io.cartel.noord.brabant.api.dtos.ProviderResponse;
+import io.cartel.noord.brabant.domain.entities.Cart;
+import io.cartel.noord.brabant.domain.entities.Item;
+import io.cartel.noord.brabant.domain.entities.Provider;
+import java.util.Objects;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -26,17 +27,17 @@ public class CartService {
     public void addItem(
         @NotNull UUID id,
         @NotNull String provider,
-        @NotNull ItemPayload payload
+        @NotNull Item item
     ) {
         try {
 
-            var item = mapper.writeValueAsString(payload);
+            var itemJson = mapper.writeValueAsString(item);
 
             redisTemplate.opsForSet()
                 .add(cartKey(id), provider);
 
             redisTemplate.opsForHash()
-                .put(providerKey(id, provider), payload.code(), item);
+                .put(providerKey(id, provider), item.code(), itemJson);
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -52,7 +53,7 @@ public class CartService {
             .delete(providerKey(id, provider), code);
     }
 
-    public CartResponse getCart(@NotNull UUID id) {
+    public Cart getCart(@NotNull UUID id) {
         var providerIds = redisTemplate.opsForSet().members(cartKey(id));
         if (providerIds == null) {
             return null;
@@ -65,18 +66,19 @@ public class CartService {
                     .stream()
                     .map(item -> {
                         try {
-                            return mapper.readValue(item.toString(), ItemPayload.class);
+                            return mapper.readValue(item.toString(), Item.class);
                         } catch (JsonProcessingException e) {
                             e.printStackTrace();
                             return null;
                         }
                     })
+                    .filter(Objects::nonNull)
                     .collect(toList());
-                return new ProviderResponse(provider, items);
+                return new Provider(provider, items);
             })
             .collect(toList());
 
-        return new CartResponse(id, providers);
+        return new Cart(id, providers);
     }
 
     private String cartKey(UUID id) {
