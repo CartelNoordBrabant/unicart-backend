@@ -76,7 +76,7 @@ public class CartRepository {
 
     public Cart getCart(@NotNull UUID id) {
         var providerIds = redisSet.members(cartKey(id));
-        if (providerIds == null) {
+        if (providerIds == null || providerIds.isEmpty()) {
             throw new CartNotFoundException("Cart (%s) was not found".formatted(id));
         }
 
