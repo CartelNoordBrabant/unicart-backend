@@ -1,6 +1,11 @@
 package io.cartel.noord.brabant.api.controllers;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
+import static org.springframework.web.bind.annotation.RequestMethod.OPTIONS;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import io.cartel.noord.brabant.api.dtos.AddItemDTO;
 import io.cartel.noord.brabant.api.dtos.CartDTO;
@@ -20,7 +25,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin
+@CrossOrigin(
+    origins = "*",
+    methods = { POST, GET, DELETE, HEAD, OPTIONS }
+)
 @RestController
 @RequestMapping("/v1/cart")
 public class CartController {
