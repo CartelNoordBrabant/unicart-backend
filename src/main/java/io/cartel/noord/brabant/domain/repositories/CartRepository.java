@@ -74,6 +74,19 @@ public class CartRepository {
         redisHash.delete(providerKey(id, providerId), code);
     }
 
+    public void removeCart(UUID id) {
+        var cartKey = cartKey(id);
+        var toDelete = new HashSet<String>();
+        toDelete.add(cartKey);
+
+        var providersId = redisSet.members(cartKey);
+        if (providersId != null) {
+            providersId.forEach(providerId -> toDelete.add(providerKey(id, providerId)));
+        }
+
+        redis.delete(toDelete);
+    }
+
     public Cart getCart(@NotNull UUID id) {
         var providerIds = redisSet.members(cartKey(id));
         if (providerIds == null || providerIds.isEmpty()) {
@@ -88,10 +101,7 @@ public class CartRepository {
                     return null;
                 }
 
-                var customerId = Optional.ofNullable(providerCart.get(CUSTOMER_FIELD))
-                    .map(UUID::fromString)
-                    .orElse(null);
-
+                var customerId = readCustomer(providerCart);
                 if (customerId == null) {
                     throw new CustomerMissingException(
                         "Cart (%s) Provider (%s)".formatted(id, providerId));
@@ -99,11 +109,8 @@ public class CartRepository {
 
                 var items = providerCart.entrySet()
                     .stream()
+                    .filter(entry -> !CUSTOMER_FIELD.equals(entry.getKey()))
                     .map(entry -> {
-                        if (CUSTOMER_FIELD.equals(entry.getKey())) {
-                            return null;
-                        }
-
                         try {
                             return mapper.readValue(entry.getValue(), Item.class);
                         } catch (JsonProcessingException e) {
@@ -113,7 +120,6 @@ public class CartRepository {
                             );
                         }
                     })
-                    .filter(Objects::nonNull)
                     .collect(toList());
 
                 return new Provider(providerId, customerId, items);
@@ -124,24 +130,16 @@ public class CartRepository {
         return new Cart(id, providers);
     }
 
+    private UUID readCustomer(Map<String, String> providerCart) {
+        var customerId = providerCart.get(CUSTOMER_FIELD);
+        return customerId != null ? UUID.fromString(customerId) : null;
+    }
+
     private String cartKey(UUID id) {
         return String.format("cart:%s", id);
     }
 
     private String providerKey(UUID id, String providerId) {
         return String.format("cart:%s:provider:%s", id, providerId);
-    }
-
-    public void removeCart(UUID id) {
-        var cartKey = cartKey(id);
-        var toDelete = new HashSet<String>();
-        toDelete.add(cartKey);
-
-        var providersId = redisSet.members(cartKey);
-        if (providersId != null) {
-            providersId.forEach(providerId -> toDelete.add(providerKey(id, providerId)));
-        }
-
-        redis.delete(toDelete);
     }
 }
