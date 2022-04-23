@@ -1,9 +1,6 @@
 package io.cartel.noord.brabant.api.controllers;
 
-import io.cartel.noord.brabant.api.dtos.ItemDTO;
-import io.cartel.noord.brabant.api.dtos.PaymentDTO;
-import io.cartel.noord.brabant.domain.entities.Item;
-import io.cartel.noord.brabant.domain.services.PaymentService;
+import io.cartel.noord.brabant.domain.services.CartService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -13,24 +10,14 @@ import java.util.UUID;
 @RequestMapping("/v1/checkout")
 public class CheckoutController {
 
-    private final PaymentService paymentService;
+    private final CartService cartService;
 
-    public CheckoutController(PaymentService paymentService) {
-        this.paymentService = paymentService;
+    public CheckoutController(CartService cartService) {
+        this.cartService = cartService;
     }
 
-    @PostMapping("/order/{id}")
-    public void checkout(@PathVariable UUID orderId, @RequestBody PaymentDTO payload) {
-
-    }
-
-    private Item mapFromDTO(PaymentDTO payment) {
-        return new Item(
-                payment.name(),
-                payment.code(),
-                payment.imageURL(),
-                payment.price(),
-                payment.amount()
-        );
+    @PostMapping("/cart/{id}")
+    public void checkout(@PathVariable UUID cartId) {
+        this.cartService.doCheckout(cartId);
     }
 }

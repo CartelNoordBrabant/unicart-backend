@@ -2,7 +2,6 @@ package io.cartel.noord.brabant.domain.repositories;
 
 import io.cartel.noord.brabant.domain.entities.Item;
 import io.cartel.noord.brabant.shared.AbstractRedisIT;
-import io.cartel.noord.brabant.domain.enums.Side;
 import io.cartel.noord.brabant.shared.helpers.RandomHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

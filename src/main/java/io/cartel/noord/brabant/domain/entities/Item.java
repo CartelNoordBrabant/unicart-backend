@@ -3,7 +3,6 @@ package io.cartel.noord.brabant.domain.entities;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import io.cartel.noord.brabant.domain.enums.Side;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import org.jetbrains.annotations.NotNull;
