@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.cartel.noord.brabant</groupId>
-    <artifactId>unicart-backend</artifactId>
+    <artifactId>unicart</artifactId>
     <version>1.0.0</version>
-    <name>unicart-backend</name>
+    <name>unicart</name>
     <description>Awesome UniCart Backend</description>
     <properties>
         <java.version>16</java.version>

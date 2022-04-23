@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  diff:
+  unicart:
     build: .
     environment:
       - SPRING_REDIS_HOST=redis
@@ -12,13 +12,13 @@ services:
     links:
       - redis
     networks:
-      - diff-redis-net
+      - unicart-redis-net
   redis:
     image: "redis:6.2-alpine"
     ports:
       - 6379:6379
     networks:
-      - diff-redis-net
+      - unicart-redis-net
 networks:
-  diff-redis-net:
+  unicart-redis-net:
     driver: bridge

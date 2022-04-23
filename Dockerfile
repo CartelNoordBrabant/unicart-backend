@@ -17,7 +17,7 @@ FROM openjdk:16-alpine
 WORKDIR /app
 
 #To reduce image size we just a JRE and .jar file
-COPY --from=MAVEN_BUILD /build/target/diff-1.0.0.jar /app/
+COPY --from=MAVEN_BUILD /build/target/unicart-1.0.0.jar /app/
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "diff-1.0.0.jar"]
+ENTRYPOINT ["java", "-jar", "unicart-1.0.0.jar"]
