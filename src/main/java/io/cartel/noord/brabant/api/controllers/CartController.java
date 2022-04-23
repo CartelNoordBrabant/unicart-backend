@@ -11,6 +11,7 @@ import io.cartel.noord.brabant.domain.entities.Item;
 import io.cartel.noord.brabant.domain.entities.Provider;
 import io.cartel.noord.brabant.domain.services.CartService;
 import java.util.UUID;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/v1/cart")
 public class CartController {
