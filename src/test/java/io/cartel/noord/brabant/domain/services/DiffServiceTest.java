@@ -1,27 +1,10 @@
 package io.cartel.noord.brabant.domain.services;
 
-import io.cartel.noord.brabant.domain.entities.Item;
-import io.cartel.noord.brabant.domain.exceptions.DiffSideNotFoundException;
-import io.cartel.noord.brabant.domain.exceptions.InvalidBase64Exception;
-import io.cartel.noord.brabant.domain.exceptions.InvalidJsonException;
-import io.cartel.noord.brabant.domain.enums.Side;
-import io.cartel.noord.brabant.shared.helpers.RandomHelper;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 /**
  * {@link DiffServiceTest} Unit tests service logic and sequence of events. All dependencies are mocked away, they

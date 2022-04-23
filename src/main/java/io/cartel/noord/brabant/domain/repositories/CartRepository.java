@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cartel.noord.brabant.domain.entities.Cart;
 import io.cartel.noord.brabant.domain.entities.Item;
 import io.cartel.noord.brabant.domain.entities.Provider;
+import io.cartel.noord.brabant.domain.exceptions.CartNotFoundException;
+import io.cartel.noord.brabant.domain.exceptions.CustomerMissingException;
+import io.cartel.noord.brabant.domain.exceptions.InvalidItemException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.HashOperations;
@@ -57,7 +59,10 @@ public class CartRepository {
             );
 
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new InvalidItemException(
+                "Cart (%s) Provider (%s) Item could not be serialized. Error %s".formatted(
+                    id, providerId, e.getMessage())
+            );
         }
     }
 
@@ -72,7 +77,7 @@ public class CartRepository {
     public Cart getCart(@NotNull UUID id) {
         var providerIds = redisSet.members(cartKey(id));
         if (providerIds == null) {
-            return null;
+            throw new CartNotFoundException("Cart (%s) was not found".formatted(id));
         }
 
         var providers = providerIds.stream()
@@ -88,7 +93,8 @@ public class CartRepository {
                     .orElse(null);
 
                 if (customerId == null) {
-                    return null;
+                    throw new CustomerMissingException(
+                        "Cart (%s) Provider (%s)".formatted(id, providerId));
                 }
 
                 var items = providerCart.entrySet()
@@ -101,8 +107,10 @@ public class CartRepository {
                         try {
                             return mapper.readValue(entry.getValue(), Item.class);
                         } catch (JsonProcessingException e) {
-                            e.printStackTrace();
-                            return null;
+                            throw new InvalidItemException(
+                                "Cart (%s) Provider (%s) Item (%s) could not be deserialized. Error %s".formatted(
+                                    id, providerId, entry.getValue(), e.getMessage())
+                            );
                         }
                     })
                     .filter(Objects::nonNull)
