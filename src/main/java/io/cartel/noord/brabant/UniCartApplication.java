@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DiffApplication {
+public class UniCartApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DiffApplication.class, args);
+        SpringApplication.run(UniCartApplication.class, args);
     }
 
 }

@@ -30,94 +30,94 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Diff Side Repository")
 class ChartRepositoryIT extends AbstractRedisIT {
 
-    @Value("${diff.cache.ttl-minutes}")
-    private long timeToLive;
-
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-
-    @Autowired
-    private ChartRepository repository;
-
-    @Nested
-    @DisplayName("when saving a diff side")
-    class Save {
-
-        @ParameterizedTest
-        @ArgumentsSource(TestDataProvider.class)
-        @DisplayName("should save diff side in a specific key")
-        public void shouldSave(Item testData) {
-
-            repository.save(testData);
-
-            var key = testKey(testData);
-            var dataSaved = redisTemplate.opsForValue().get(key);
-
-            assertEquals(testData.data(), dataSaved);
-        }
-
-        @ParameterizedTest
-        @ArgumentsSource(TestDataProvider.class)
-        @DisplayName("should set a expiration time diff side data")
-        public void shouldExpire(Item testData) {
-
-            repository.save(testData);
-
-            var key = testKey(testData);
-            var remainingMinutes = redisTemplate.getExpire(key, TimeUnit.MINUTES);
-
-            assertNotNull(remainingMinutes);
-            assertTrue(remainingMinutes <= timeToLive && remainingMinutes > 0);
-        }
-    }
-
-    @Nested
-    @DisplayName("when searching data by side and ID")
-    class FetchDataBySideAndDiffId {
-
-        @ParameterizedTest
-        @ArgumentsSource(TestDataProvider.class)
-        @DisplayName("should find a specific key")
-        public void shouldFind(Item testData) {
-            var key = testKey(testData);
-            redisTemplate.opsForValue().set(key, testData.data());
-
-            var dataRetrieved = repository.fetchDataBySideAndDiffId(testData.side(), testData.diffId());
-
-            assertTrue(dataRetrieved.isPresent());
-            assertEquals(testData.data(), dataRetrieved.get());
-        }
-
-        @ParameterizedTest
-        @ArgumentsSource(TestDataProvider.class)
-        @DisplayName("should return empty if a key does not exists")
-        public void shouldNotFind(Item testData) {
-            var key = testKey(testData);
-            redisTemplate.delete(key);
-
-            var dataRetrieved = repository.fetchDataBySideAndDiffId(testData.side(), testData.diffId());
-
-            assertFalse(dataRetrieved.isPresent());
-        }
-    }
-
-    private String testKey(Item testData) {
-        return "diff:" + testData.diffId() + ":" + testData.side().getId();
-    }
-
-    /**
-     * Provides test data for each test case, so we don't need to redefine it.
-     */
-    static class TestDataProvider implements ArgumentsProvider {
-
-        @Override
-        public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) {
-            return Stream.of(
-                    new Item(Side.LEFT, RandomHelper.uuid(), "{\"id\":123,\"message\":\"some json\"}"),
-                    new Item(Side.RIGHT, RandomHelper.uuid(), "some plain text"),
-                    new Item(Side.RIGHT, RandomHelper.uuid(), "<html><head></head><body><h1>some html</h1></body></html>"),
-                    new Item(Side.LEFT, RandomHelper.uuid(), "7B2EUCQfTVqbDyEYySKs444Gex/SxMewVBP5MPbS3ktgmxwwzGEaB")
-            ).map(Arguments::of);
-        }
-    }
+//    @Value("${diff.cache.ttl-minutes}")
+//    private long timeToLive;
+//
+//    @Autowired
+//    private StringRedisTemplate redisTemplate;
+//
+//    @Autowired
+//    private ChartRepository repository;
+//
+//    @Nested
+//    @DisplayName("when saving a diff side")
+//    class Save {
+//
+//        @ParameterizedTest
+//        @ArgumentsSource(TestDataProvider.class)
+//        @DisplayName("should save diff side in a specific key")
+//        public void shouldSave(Item testData) {
+//
+//            repository.save(testData);
+//
+//            var key = testKey(testData);
+//            var dataSaved = redisTemplate.opsForValue().get(key);
+//
+//            assertEquals(testData.data(), dataSaved);
+//        }
+//
+//        @ParameterizedTest
+//        @ArgumentsSource(TestDataProvider.class)
+//        @DisplayName("should set a expiration time diff side data")
+//        public void shouldExpire(Item testData) {
+//
+//            repository.save(testData);
+//
+//            var key = testKey(testData);
+//            var remainingMinutes = redisTemplate.getExpire(key, TimeUnit.MINUTES);
+//
+//            assertNotNull(remainingMinutes);
+//            assertTrue(remainingMinutes <= timeToLive && remainingMinutes > 0);
+//        }
+//    }
+//
+//    @Nested
+//    @DisplayName("when searching data by side and ID")
+//    class FetchDataBySideAndDiffId {
+//
+//        @ParameterizedTest
+//        @ArgumentsSource(TestDataProvider.class)
+//        @DisplayName("should find a specific key")
+//        public void shouldFind(Item testData) {
+//            var key = testKey(testData);
+//            redisTemplate.opsForValue().set(key, testData.data());
+//
+//            var dataRetrieved = repository.fetchDataBySideAndDiffId(testData.side(), testData.diffId());
+//
+//            assertTrue(dataRetrieved.isPresent());
+//            assertEquals(testData.data(), dataRetrieved.get());
+//        }
+//
+//        @ParameterizedTest
+//        @ArgumentsSource(TestDataProvider.class)
+//        @DisplayName("should return empty if a key does not exists")
+//        public void shouldNotFind(Item testData) {
+//            var key = testKey(testData);
+//            redisTemplate.delete(key);
+//
+//            var dataRetrieved = repository.fetchDataBySideAndDiffId(testData.side(), testData.diffId());
+//
+//            assertFalse(dataRetrieved.isPresent());
+//        }
+//    }
+//
+//    private String testKey(Item testData) {
+//        return "diff:" + testData.diffId() + ":" + testData.side().getId();
+//    }
+//
+//    /**
+//     * Provides test data for each test case, so we don't need to redefine it.
+//     */
+//    static class TestDataProvider implements ArgumentsProvider {
+//
+//        @Override
+//        public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) {
+//            return Stream.of(
+//                    new Item(Side.LEFT, RandomHelper.uuid(), "{\"id\":123,\"message\":\"some json\"}"),
+//                    new Item(Side.RIGHT, RandomHelper.uuid(), "some plain text"),
+//                    new Item(Side.RIGHT, RandomHelper.uuid(), "<html><head></head><body><h1>some html</h1></body></html>"),
+//                    new Item(Side.LEFT, RandomHelper.uuid(), "7B2EUCQfTVqbDyEYySKs444Gex/SxMewVBP5MPbS3ktgmxwwzGEaB")
+//            ).map(Arguments::of);
+//        }
+//    }
 }
