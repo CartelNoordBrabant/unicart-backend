@@ -54,6 +54,7 @@ public class CartController {
 
     @PostMapping("{id}/checkout")
     public void checkout(@PathVariable UUID id) {
+        cartService.doCheckout(id);
     }
 
     private CartDTO mapToDTO(Cart cart) {

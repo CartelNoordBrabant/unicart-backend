@@ -7,9 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cartel.noord.brabant.domain.entities.Cart;
 import io.cartel.noord.brabant.domain.entities.Item;
 import io.cartel.noord.brabant.domain.entities.Provider;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.HashOperations;
@@ -22,12 +24,14 @@ public class CartRepository {
 
     private static final String CUSTOMER_FIELD = "customer";
 
+    private final StringRedisTemplate redis;
     private final HashOperations<String, String, String> redisHash;
     private final SetOperations<String, String> redisSet;
     private final ObjectMapper mapper;
 
     public CartRepository(StringRedisTemplate redisTemplate, ObjectMapper mapper) {
         this.mapper = mapper;
+        this.redis = redisTemplate;
         this.redisHash = redisTemplate.opsForHash();
         this.redisSet = redisTemplate.opsForSet();
     }
@@ -116,7 +120,20 @@ public class CartRepository {
         return String.format("cart:%s", id);
     }
 
-    private String providerKey(UUID id, String provider) {
-        return String.format("cart:%s:provider:%s", id, provider);
+    private String providerKey(UUID id, String providerId) {
+        return String.format("cart:%s:provider:%s", id, providerId);
+    }
+
+    public void removeCart(UUID id) {
+        var cartKey = cartKey(id);
+        var toDelete = new HashSet<String>();
+        toDelete.add(cartKey);
+
+        var providersId = redisSet.members(cartKey);
+        if (providersId != null) {
+            providersId.forEach(providerId -> toDelete.add(providerKey(id, providerId)));
+        }
+
+        redis.delete(toDelete);
     }
 }

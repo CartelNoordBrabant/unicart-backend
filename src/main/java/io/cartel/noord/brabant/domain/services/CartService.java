@@ -36,4 +36,8 @@ public class CartService {
     public Cart getCart(@NotNull UUID id) {
         return repository.getCart(id);
     }
+
+    public void doCheckout(UUID id) {
+        repository.removeCart(id);
+    }
 }
